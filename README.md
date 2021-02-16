@@ -34,7 +34,7 @@ Landscape walkthrough video
 <img src="https://github.com/erikivy/flixter/blob/master/landscapeWalkthrough.gif" width=550><br>
 
 ### Notes
-Describe any challenges encountered while building the app.
+I had some bugs occur with my emulator, but they were resolved by installing a new emulator.
 
 ### Open-source libraries used
 
