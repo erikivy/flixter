@@ -1,5 +1,6 @@
 package com.example.flixter.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.target.Target;
 import com.example.flixter.DetailActivity;
 import com.example.flixter.R;
 import com.example.flixter.models.Movie;
@@ -23,6 +27,8 @@ import com.example.flixter.models.Movie;
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
 
@@ -66,6 +72,7 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        int radius;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,7 +94,16 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
                 // else imageUrl = poster image
                 imageUrl = movie.getPosterPath();
             }
-            Glide.with(context).load(imageUrl).into(ivPoster);
+            radius = 30;
+            //Glide.with(context).load(imageUrl).into(ivPoster);
+
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                Glide.with(context).load(imageUrl).transform(new RoundedCorners(radius)).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivPoster);
+            }
+
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                Glide.with(context).load(imageUrl).transform(new RoundedCorners(radius)).override(750, 550).into(ivPoster);
+            }
 
             //1. Register click listener on the whole row
             container.setOnClickListener(new View.OnClickListener(){
@@ -96,7 +112,11 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
                     //2. navigate to a new activity
                     Intent i = new Intent(context, DetailActivity.class);
                     i.putExtra("movie", Parcels.wrap(movie));
-                    context.startActivity(i);
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation((Activity)context, (View)tvOverview, "transOverview");
+                    context.startActivity(i, options.toBundle());
+                    //context.startActivity(i);
                 }
             });
         }

@@ -8,6 +8,7 @@
     tools:context=".DetailActivity"
     android:orientation="vertical"
     android:background="#CF000000"
+    android:transitionName="transOverview"
     >
 
     <com.google.android.youtube.player.YouTubePlayerView
